@@ -1,58 +1,34 @@
-
 package com.example.shelfsense.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Light
-val md_theme_light_primary = Color(0xFF1976D2)
-val md_theme_light_onPrimary = Color(0xFFFFFFFF)
-val md_theme_light_primaryContainer = Color(0xFFBBDEFB)
-val md_theme_light_onPrimaryContainer = Color(0xFF0A1E2E)
-val md_theme_light_secondary = Color(0xFF03A9F4)
-val md_theme_light_onSecondary = Color(0xFF000000)
-val md_theme_light_secondaryContainer = Color(0xFFB3E5FC)
-val md_theme_light_onSecondaryContainer = Color(0xFF001318)
-val md_theme_light_tertiary = Color(0xFF26A69A)
-val md_theme_light_onTertiary = Color(0xFF000000)
-val md_theme_light_tertiaryContainer = Color(0xFFB2DFDB)
-val md_theme_light_onTertiaryContainer = Color(0xFF081F1D)
-val md_theme_light_error = Color(0xFFD32F2F)
-val md_theme_light_onError = Color(0xFFFFFFFF)
-val md_theme_light_errorContainer = Color(0xFFFFDAD4)
-val md_theme_light_onErrorContainer = Color(0xFF410002)
-val md_theme_light_background = Color(0xFFF4F6F8)
-val md_theme_light_onBackground = Color(0xFF212121)
-val md_theme_light_surface = Color(0xFFFFFFFF)
-val md_theme_light_onSurface = Color(0xFF212121)
-val md_theme_light_outline = Color(0xFF8E8E93)
-val md_theme_light_surfaceVariant = Color(0xFFE5EAF0)
-val md_theme_light_onSurfaceVariant = Color(0xFF424B57)
+// === MTI Brand Palette ===
+val MTI_Blue = Color(0xFF1A237E)
+val MTI_Red = Color(0xFFE53935)
+val MTI_White = Color(0xFFFFFFFF)
+val MTI_Charcoal = Color(0xFF212121)
 
-// Dark
-val md_theme_dark_primary = Color(0xFF90CAF9)
-val md_theme_dark_onPrimary = Color(0xFF002544)
-val md_theme_dark_primaryContainer = Color(0xFF0D47A1)
-val md_theme_dark_onPrimaryContainer = Color(0xFFBBDEFB)
-val md_theme_dark_secondary = Color(0xFF81D4FA)
-val md_theme_dark_onSecondary = Color(0xFF001E27)
-val md_theme_dark_secondaryContainer = Color(0xFF01579B)
-val md_theme_dark_onSecondaryContainer = Color(0xFFB3E5FC)
-val md_theme_dark_tertiary = Color(0xFF80CBC4)
-val md_theme_dark_onTertiary = Color(0xFF00201D)
-val md_theme_dark_tertiaryContainer = Color(0xFF004D40)
-val md_theme_dark_onTertiaryContainer = Color(0xFFB2DFDB)
-val md_theme_dark_error = Color(0xFFFFB4A9)
-val md_theme_dark_onError = Color(0xFF680003)
-val md_theme_dark_errorContainer = Color(0xFF930006)
-val md_theme_dark_onErrorContainer = Color(0xFFFFDAD4)
-val md_theme_dark_background = Color(0xFF121417)
-val md_theme_dark_onBackground = Color(0xFFE5E7EB)
-val md_theme_dark_surface = Color(0xFF1A1C1F)
-val md_theme_dark_onSurface = Color(0xFFE5E7EB)
-val md_theme_dark_outline = Color(0xFF9AA0A6)
-val md_theme_dark_surfaceVariant = Color(0xFF323842)
-val md_theme_dark_onSurfaceVariant = Color(0xFFC6CCD7)
+// === Light Theme ===
+val md_theme_light_primary = MTI_Blue
+val md_theme_light_onPrimary = MTI_White
+val md_theme_light_secondary = MTI_Red
+val md_theme_light_onSecondary = MTI_White
+val md_theme_light_background = MTI_White
+val md_theme_light_onBackground = MTI_Charcoal
+val md_theme_light_surface = MTI_White
+val md_theme_light_onSurface = MTI_Charcoal
 
-// Utility
-val Success = Color(0xFF2E7D32)
-val Warning = Color(0xFFF9A825)
+// === Dark Theme ===
+val md_theme_dark_primary = MTI_Blue
+val md_theme_dark_onPrimary = MTI_White
+val md_theme_dark_secondary = MTI_Red
+val md_theme_dark_onSecondary = MTI_White
+val md_theme_dark_background = Color(0xFF121212)
+val md_theme_dark_onBackground = MTI_White
+val md_theme_dark_surface = Color(0xFF121212)
+val md_theme_dark_onSurface = MTI_White
+
+// Semantic status colors
+val StockOk = Color(0xFF2E7D32)     // green
+val StockLow = MTI_Red              // red accent from brand
+
