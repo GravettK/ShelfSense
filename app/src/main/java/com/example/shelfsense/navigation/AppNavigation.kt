@@ -40,7 +40,7 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
             composable(Routes.HOME) { HomeScreen(navController) }         // Orders
             composable(Routes.SCAN) { ScanScreen(navController) }         // Big center FAB targets this
             composable(Routes.COMPONENT_DETAIL) { ComponentDetailScreen(navController) }
-            composable(Routes.WHERE_USED) { WhereUsedScreen(navController) }
+            composable(Routes.WHERE_USED) { StockScreen(navController) }
             composable(Routes.LOGIN) { LoginScreen(navController) }
             composable(Routes.PROFILE) { ProfileScreen(navController) }
         }

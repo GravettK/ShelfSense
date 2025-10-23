@@ -18,7 +18,7 @@ val ScreenRegistry: Map<String, ScreenConfig> = mapOf(
     Routes.HOME to ScreenConfig(Routes.HOME, "ShelfSense"),
     Routes.SCAN to ScreenConfig(Routes.SCAN, "Scan"),
     Routes.COMPONENT_DETAIL to ScreenConfig(Routes.COMPONENT_DETAIL, "Component Detail"),
-    Routes.WHERE_USED to ScreenConfig(Routes.WHERE_USED, "Where Used"),
+    Routes.WHERE_USED to ScreenConfig(Routes.WHERE_USED, "Stock"),
     Routes.LOGIN to ScreenConfig(Routes.LOGIN, "Login"),
     Routes.PROFILE to ScreenConfig(Routes.PROFILE, "Profile"),
 )
