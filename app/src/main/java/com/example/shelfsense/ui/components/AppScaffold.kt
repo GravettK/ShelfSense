@@ -24,10 +24,11 @@ fun AppScaffold(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            // Center-aligned top app bar for consistent centered title
+            CenterAlignedTopAppBar(
                 title = { Text(title) },
                 actions = { topBarActions?.invoke() },
-                colors = TopAppBarDefaults.topAppBarColors(
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colors.primary,
                     titleContentColor = colors.onPrimary,
                     actionIconContentColor = colors.onPrimary,
