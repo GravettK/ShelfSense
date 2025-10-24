@@ -74,7 +74,7 @@ fun HomeScreen(navController: NavController) {
             items(filtered) { order ->
                 OrderCardRow(
                     item = order,
-                    onClick = { navController.navigate(Routes.COMPONENT_DETAIL) } // TODO: route to OrderDetail
+                    onClick = { navController.navigate(Routes.orderDetail(order.orderNo)) }
                 )
             }
             item { Spacer(Modifier.height(64.dp)) } // space above FAB

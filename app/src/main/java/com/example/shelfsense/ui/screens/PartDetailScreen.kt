@@ -1,18 +1,20 @@
 package com.example.shelfsense.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.shelfsense.navigation.Routes
 import com.example.shelfsense.ui.components.CenteredScreenTitle
 import com.example.shelfsense.ui.theme.Dimens
+import com.example.shelfsense.data.entities.StockItem  // ⬅ use shared model
 
-// Reuse same mock data for now
+// Mock data (you can move this later to a repository/ViewModel)
 private val mockParts = listOf(
     StockItem("MTI-001", "Hydraulic Tank Cap", 45, 10),
     StockItem("MTI-002", "Diesel Hose Clamp", 5, 20),
@@ -23,7 +25,6 @@ private val mockParts = listOf(
 
 @Composable
 fun PartDetailScreen(navController: NavController, sku: String?) {
-    // Normally you’d load this data from a ViewModel or repository
     val part = mockParts.firstOrNull { it.sku == sku }
 
     Column(
@@ -45,13 +46,9 @@ fun PartDetailScreen(navController: NavController, sku: String?) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = {
-                    navController.navigate("${Routes.WHERE_USED}/${part.name}")
-                },
+                onClick = { navController.navigate(Routes.whereUsedByName(part.name)) },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("View Where Used")
-            }
+            ) { Text("View Where Used") }
         }
     }
 }

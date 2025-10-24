@@ -8,7 +8,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,7 +23,10 @@ data class ProductUsage(
 )
 
 @Composable
-fun WhereUsedScreen(navController: NavController, componentName: String? = "Unknown Component") {
+fun WhereUsedScreen(
+    navController: NavController,
+    componentName: String? = "Unknown Component"
+) {
     val usageList = remember {
         listOf(
             ProductUsage("500L Hydraulic Tank", 1),
@@ -41,7 +45,7 @@ fun WhereUsedScreen(navController: NavController, componentName: String? = "Unkn
         CenteredScreenTitle("Where Used")
 
         Text(
-            text = "Component: $componentName",
+            text = "Component: ${componentName ?: "Unknown Component"}",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary
         )
@@ -79,8 +83,7 @@ fun WhereUsedScreen(navController: NavController, componentName: String? = "Unkn
 @Composable
 fun ProductUsageCard(usage: ProductUsage) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = MaterialTheme.shapes.medium
