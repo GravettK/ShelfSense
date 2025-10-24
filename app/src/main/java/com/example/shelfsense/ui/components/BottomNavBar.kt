@@ -20,7 +20,7 @@ private data class Tab(val route: String, val label: String, val icon: ImageVect
 
 private val Tabs = listOf(
     Tab(Routes.HOME, "Orders", Icons.Outlined.Assignment),
-    Tab(Routes.WHERE_USED, "Where-used", Icons.Outlined.ListAlt),
+    Tab(Routes.STOCK, "Stock", Icons.Outlined.ListAlt),
     Tab(Routes.PROFILE, "Profile", Icons.Outlined.Person)
 )
 

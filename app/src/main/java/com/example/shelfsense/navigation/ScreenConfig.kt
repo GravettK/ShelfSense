@@ -8,8 +8,9 @@ data class ScreenConfig(
 object Routes {
     const val HOME = "home"                 // “Orders”
     const val SCAN = "scan"
-    const val COMPONENT_DETAIL = "component_detail"
+    const val COMPONENT_DETAIL = "component_detail/{sku}"
     const val WHERE_USED = "where_used"
+    const val STOCK = "stock" //
     const val LOGIN = "login"
     const val PROFILE = "profile"
 }
@@ -17,7 +18,8 @@ object Routes {
 val ScreenRegistry: Map<String, ScreenConfig> = mapOf(
     Routes.HOME to ScreenConfig(Routes.HOME, "ShelfSense"),
     Routes.SCAN to ScreenConfig(Routes.SCAN, "Scan"),
-    Routes.COMPONENT_DETAIL to ScreenConfig(Routes.COMPONENT_DETAIL, "Component Detail"),
+    Routes.COMPONENT_DETAIL to ScreenConfig("component_detail/{sku}", "Part Detail"),
+    Routes.STOCK to ScreenConfig(Routes.STOCK, "Stock"),
     Routes.WHERE_USED to ScreenConfig(Routes.WHERE_USED, "Where Used"),
     Routes.LOGIN to ScreenConfig(Routes.LOGIN, "Login"),
     Routes.PROFILE to ScreenConfig(Routes.PROFILE, "Profile"),
