@@ -95,7 +95,7 @@ fun StockScreen(navController: NavController) {
         ) {
             items(filteredItems) { item ->
                 StockItemCard(item = item, onClick = {
-                    // navController.navigate("${Routes.COMPONENT_DETAIL}/${item.sku}")
+                    navController.navigate("component_detail/${item.sku}")
                 })
             }
 

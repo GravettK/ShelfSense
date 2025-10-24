@@ -9,6 +9,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.shelfsense.ui.components.AppScaffold
 import com.example.shelfsense.ui.components.BottomNavBar
 import com.example.shelfsense.ui.screens.*
+import androidx.navigation.navArgument
+
 
 @Composable
 fun AppNavigation(navController: NavHostController = rememberNavController()) {
@@ -40,9 +42,18 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
             composable(Routes.HOME) { HomeScreen(navController) }         // Orders
             composable(Routes.SCAN) { ScanScreen(navController) }         // Big center FAB targets this
             composable(Routes.COMPONENT_DETAIL) { ComponentDetailScreen(navController) }
-            composable(Routes.WHERE_USED) { StockScreen(navController) }
+            composable(Routes.WHERE_USED) { WhereUsedScreen(navController) }
+            composable(Routes.STOCK) {StockScreen(navController)}
             composable(Routes.LOGIN) { LoginScreen(navController) }
             composable(Routes.PROFILE) { ProfileScreen(navController) }
+            composable(
+                route = Routes.COMPONENT_DETAIL,
+                arguments = listOf(navArgument("sku") { defaultValue = "" })
+            ) { backStackEntry ->
+                val sku = backStackEntry.arguments?.getString("sku")
+                PartDetailScreen(navController, sku)
+            }
+
         }
     }
 }
