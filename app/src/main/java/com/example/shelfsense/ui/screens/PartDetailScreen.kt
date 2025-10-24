@@ -12,6 +12,15 @@ import com.example.shelfsense.navigation.Routes
 import com.example.shelfsense.ui.components.CenteredScreenTitle
 import com.example.shelfsense.ui.theme.Dimens
 
+// Reuse same mock data for now
+private val mockParts = listOf(
+    StockItem("MTI-001", "Hydraulic Tank Cap", 45, 10),
+    StockItem("MTI-002", "Diesel Hose Clamp", 5, 20),
+    StockItem("MTI-003", "Aluminium Bracket", 100, 30),
+    StockItem("MTI-004", "Seal Ring", 12, 15),
+    StockItem("MTI-005", "Pressure Valve", 22, 15)
+)
+
 @Composable
 fun PartDetailScreen(navController: NavController, sku: String?) {
     // Normally you’d load this data from a ViewModel or repository
@@ -36,7 +45,9 @@ fun PartDetailScreen(navController: NavController, sku: String?) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { navController.navigate(Routes.WHERE_USED) },
+                onClick = {
+                    navController.navigate("${Routes.WHERE_USED}/${part.name}")
+                },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text("View Where Used")
@@ -44,12 +55,3 @@ fun PartDetailScreen(navController: NavController, sku: String?) {
         }
     }
 }
-
-// Reuse same mock data for now
-val mockParts = listOf(
-    StockItem("MTI-001", "Hydraulic Tank Cap", 45, 10),
-    StockItem("MTI-002", "Diesel Hose Clamp", 5, 20),
-    StockItem("MTI-003", "Aluminium Bracket", 100, 30),
-    StockItem("MTI-004", "Seal Ring", 12, 15),
-    StockItem("MTI-005", "Pressure Valve", 22, 15)
-)
