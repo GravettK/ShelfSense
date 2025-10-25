@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Add your existing colors here -->
 
-    <!-- Add these missing color definitions -->
-    <color name="card_dark">#2C2C2C</color>          <!-- Example: A dark grey -->
-    <color name="background_dark">#121212</color>   <!-- Example: A very dark grey, common for dark themes -->
-    <color name="grey_text">#808080</color>          <!-- Example: Standard grey -->
+    <!-- App Backgrounds -->
+    <color name="background_dark">#121212</color>  <!-- Dark background -->
+    <color name="card_dark">#2C2C2C</color>        <!-- Card background -->
+    <color name="surface_dark">#1E1E1E</color>     <!-- UI surface background -->
+
+    <!-- Primary Theme Colors -->
+    <color name="colorPrimary">#BB86FC</color>
+    <color name="colorPrimaryVariant">#3700B3</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+
+    <!-- Secondary Theme Colors -->
+    <color name="colorSecondary">#03DAC5</color>
+    <color name="colorSecondaryVariant">#018786</color>
+    <color name="colorOnSecondary">#000000</color>
+
+    <!-- Text Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey_text">#808080</color>
+    <color name="text_light">#E0E0E0</color>
+    <color name="text_dark">#212121</color>
+
+    <!-- Status / Feedback -->
+    <color name="error_red">#CF6679</color>
+    <color name="success_green">#00C853</color>
+    <color name="warning_yellow">#FFD600</color>
+
+    <!-- Accents -->
+    <color name="teal_accent">#03DAC5</color>
+    <color name="highlight_blue">#2196F3</color>
 
 </resources>
