@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Add your existing colors here -->
+
+    <!-- Add these missing color definitions -->
+    <color name="card_dark">#2C2C2C</color>          <!-- Example: A dark grey -->
+    <color name="background_dark">#121212</color>   <!-- Example: A very dark grey, common for dark themes -->
+    <color name="grey_text">#808080</color>          <!-- Example: Standard grey -->
+
+</resources>

@@ -26,4 +26,36 @@
     <!-- UI-specific helpers -->
     <color name="app_accent">#FF03DAC5</color>    <!-- mint/teal accent for buttons -->
     <color name="card_background">#FF1E1E1E</color>
+<<<<<<< HEAD
 </resources>
+=======
+
+
+    <!-- Primary app colors -->
+    <color name="colorPrimary">#03A9F4</color>         <!-- Light Blue -->
+    <color name="colorPrimaryDark">#0288D1</color>     <!-- Darker Blue -->
+    <color name="colorAccent">#03DAC5</color>          <!-- Teal Accent -->
+
+    <!-- Background and surface colors -->
+    <color name="background_light">#FFFFFF</color>
+    <color name="background_dark">#121212</color>
+    <color name="surface_dark">#1E1E1E</color>
+    <color name="surface_light">#F5F5F5</color>
+
+    <!-- Text colors -->
+    <color name="text_primary_dark">#FFFFFF</color>
+    <color name="text_secondary_dark">#B3FFFFFF</color>
+    <color name="text_primary_light">#000000</color>
+    <color name="text_secondary_light">#8A000000</color>
+
+    <!-- Accent and buttons -->
+    <color name="teal_accent">#03DAC5</color>
+    <color name="button_primary">#03A9F4</color>
+    <color name="button_text">#FFFFFF</color>
+
+    <!-- Error and success states -->
+    <color name="error_red">#CF6679</color>
+    <color name="success_green">#4CAF50</color>
+
+</resources>
+>>>>>>> 25d1228 (updated login page)
