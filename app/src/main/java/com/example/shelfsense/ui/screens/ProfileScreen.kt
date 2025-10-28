@@ -1,30 +1,42 @@
 package com.example.shelfsense.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.shelfsense.ui.components.CenteredScreenTitle
+import com.example.shelfsense.navigation.Routes
+import com.example.shelfsense.repository.AuthRepository
 
 @Composable
 fun ProfileScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        CenteredScreenTitle("Profile")
+    val context = navController.context
+    val email = AuthRepository.getUserEmail(context) ?: "Unknown User"
 
-        Box(
+    Scaffold(topBar = { TopAppBar(title = { Text("Profile") }) }) { pv ->
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .weight(1f),
-            contentAlignment = Alignment.Center
+                .padding(pv)
+                .padding(16.dp)
+                .fillMaxWidth()
         ) {
-            Text("Profile / Settings screen")
+            Text("Logged in as:", style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.height(4.dp))
+            Text(email, style = MaterialTheme.typography.bodyLarge)
+            Spacer(Modifier.height(20.dp))
+
+            Button(
+                onClick = {
+                    AuthRepository.logout(context)
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.HOME) { inclusive = true }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Logout")
+            }
         }
     }
 }

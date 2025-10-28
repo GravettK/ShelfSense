@@ -12,12 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun OrderDetailScreen(
-    navController: NavController,
-    orderNo: String
+fun SelectProductScreen(
+    navController: NavController
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Order $orderNo") }) }
+        topBar = { TopAppBar(title = { Text("Select Product") }) }
     ) { inner ->
         Column(
             modifier = Modifier
@@ -25,7 +24,7 @@ fun OrderDetailScreen(
                 .padding(inner)
                 .padding(16.dp)
         ) {
-            Text("Order Details for #$orderNo")
+            Text("Select Product placeholder")
         }
     }
 }

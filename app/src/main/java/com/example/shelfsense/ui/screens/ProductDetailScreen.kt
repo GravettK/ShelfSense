@@ -1,109 +1,57 @@
 package com.example.shelfsense.ui.screens
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.shelfsense.R
-import com.example.shelfsense.data.repository.MockData
-import com.example.shelfsense.ui.components.CenteredScreenTitle
-import com.example.shelfsense.ui.theme.Dimens
 
+/**
+ * Accepts an optional [code] (e.g., SKU) coming from NavBackStackEntry args:
+ * ProductDetailScreen(navController, backStack.arguments?.getString("code"))
+ */
 @Composable
-fun ProductDetailScreen(navController: NavController, modelCode: String?) {
-    val product = modelCode?.let { MockData.getProduct(it) }
+fun ProductDetailScreen(
+    navController: NavController,
+    code: String? = null
+) {
+    // Pre-fill from nav arg when available; keeps your existing UI intact.
+    var name by remember { mutableStateOf("Product") }
+    var sku by remember { mutableStateOf(code ?: "SKU-000") }
+    var description by remember { mutableStateOf("Description...") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(Dimens.ScreenPadding),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        CenteredScreenTitle(product?.name ?: "Product Detail")
-
-        if (product == null) {
-            Text("Product not found.", style = MaterialTheme.typography.bodyMedium)
-            return@Column
-        }
-
-        // Photo (placeholder tank icon)
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    Scaffold(topBar = { TopAppBar(title = { Text("Product Details") }) }) { pv ->
+        Column(
+            modifier = Modifier
+                .padding(pv)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Row(
+            Text("Name: $name")
+            Spacer(Modifier.padding(top = 8.dp))
+            Text("SKU: $sku")
+            Spacer(Modifier.padding(top = 8.dp))
+            Text(description)
+            Spacer(Modifier.padding(top = 16.dp))
+            Button(
+                onClick = { /* TODO: actions such as edit, add to stock, etc. */ },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    .fillMaxSize(fraction = 1f)
+                    .padding(top = 0.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = "Product image",
-                    modifier = Modifier.size(64.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-                )
-                Column {
-                    Text("Code: ${product.code}", style = MaterialTheme.typography.bodyMedium)
-                    Text("Size: ${product.lengthMm}×${product.widthMm}×${product.heightMm} mm",
-                        style = MaterialTheme.typography.bodyMedium)
-                    Text("Weight: ${product.weightKg} kg", style = MaterialTheme.typography.bodyMedium)
-                }
+                Text("Action")
             }
-        }
-
-        Text("Parts for 1 unit", style = MaterialTheme.typography.titleMedium)
-        Divider()
-
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxSize()) {
-            items(product.parts) { part ->
-                val stock = MockData.getStock(part.sku)?.onHand ?: 0
-                val ok = stock >= part.qtyPerUnit
-                PartRow(
-                    name = "${part.name}  (x${part.qtyPerUnit})",
-                    sku = part.sku,
-                    ok = ok,
-                    note = if (!ok) "short ${part.qtyPerUnit - stock}" else null
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun PartRow(name: String, sku: String, ok: Boolean, note: String?) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(Modifier.weight(1f)) {
-            Text(name, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
-            Text("SKU: $sku", style = MaterialTheme.typography.labelMedium)
-        }
-        Text(
-            text = if (ok) "✅" else "❌",
-            style = MaterialTheme.typography.titleLarge
-        )
-        if (note != null) {
-            Spacer(Modifier.width(8.dp))
-            Text(note, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
         }
     }
 }

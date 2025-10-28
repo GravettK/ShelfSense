@@ -3,41 +3,59 @@ package com.example.shelfsense.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
-enum class BadgeStyle { INFO, SUCCESS, WARNING, ERROR, NEUTRAL }
+enum class BadgeStyle { INFO, SUCCESS, WARNING, ERROR }
 
+/**
+ * Base badge (your component).
+ */
 @Composable
 fun StatusBadge(
     label: String,
     style: BadgeStyle,
     modifier: Modifier = Modifier
 ) {
-    val (bg, fg) = when (style) {
-        BadgeStyle.INFO    -> MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
-        BadgeStyle.SUCCESS -> Color(0xFF2E7D32) to Color.White
-        BadgeStyle.WARNING -> Color(0xFFFFA000) to Color.Black
-        BadgeStyle.ERROR   -> Color(0xFFD32F2F) to Color.White
-        BadgeStyle.NEUTRAL -> MaterialTheme.colorScheme.surfaceVariant to MaterialTheme.colorScheme.onSurfaceVariant
+    val (bgColor, textColor) = when (style) {
+        BadgeStyle.INFO -> Pair(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.onPrimary)
+        BadgeStyle.SUCCESS -> Pair(MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary)
+        BadgeStyle.WARNING -> Pair(MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.onSecondary)
+        BadgeStyle.ERROR -> Pair(MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.onError)
     }
 
     Box(
         modifier = modifier
-            .clip(MaterialTheme.shapes.small)
-            .background(bg)
-            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .background(bgColor, RoundedCornerShape(8.dp))
+            .padding(horizontal = 8.dp, vertical = 3.dp)
     ) {
         Text(
             text = label.uppercase(),
-            color = fg,
-            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+            color = textColor,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
+
+/**
+ * Convenience mapper: order status -> BadgeStyle.
+ */
+fun badgeStyleForStatus(status: String): BadgeStyle =
+    when (status.trim().lowercase()) {
+        "completed" -> BadgeStyle.SUCCESS
+        "in progress" -> BadgeStyle.INFO
+        "on hold" -> BadgeStyle.WARNING
+        "cancelled" -> BadgeStyle.ERROR
+        "pending" -> BadgeStyle.WARNING
+        else -> BadgeStyle.INFO
+    }

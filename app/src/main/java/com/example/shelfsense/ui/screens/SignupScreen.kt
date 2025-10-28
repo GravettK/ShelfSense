@@ -13,18 +13,32 @@ import com.example.shelfsense.navigation.Routes
 import com.example.shelfsense.repository.AuthRepository
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun SignupScreen(navController: NavController) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
 
-    Scaffold(topBar = { TopAppBar(title = { Text("Login") }) }) { pv ->
+    Scaffold(topBar = { TopAppBar(title = { Text("Sign up") }) }) { pv ->
         Column(
             modifier = Modifier
                 .padding(pv)
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Full name") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            Spacer(Modifier.height(12.dp))
+
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -53,25 +67,18 @@ fun LoginScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    if (email.isBlank() || password.isBlank()) {
-                        error = "Please enter both email and password."
+                    if (name.isBlank() || email.isBlank() || password.isBlank()) {
+                        error = "Please fill in all fields."
                     } else {
-                        // Persist login
+                        // In this local build, "sign up" immediately logs the user in
                         AuthRepository.login(navController.context, email)
-                        // Go to Home and remove Login from back stack
                         navController.navigate(Routes.HOME) {
                             popUpTo(Routes.LOGIN) { inclusive = true }
                         }
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
-            ) { Text("Login") }
-
-            Spacer(Modifier.height(8.dp))
-
-            TextButton(onClick = { navController.navigate(Routes.SIGNUP) }) {
-                Text("Create an account")
-            }
+            ) { Text("Create account") }
 
             if (error != null) {
                 Spacer(Modifier.height(8.dp))

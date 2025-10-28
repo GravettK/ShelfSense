@@ -1,50 +1,53 @@
 package com.example.shelfsense.ui.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Assignment
-import androidx.compose.material.icons.outlined.ListAlt
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.shelfsense.navigation.BottomNavRoutes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Inventory2
+import androidx.compose.material.icons.outlined.ListAlt
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.QrCode
+import androidx.compose.material.icons.outlined.ViewModule
 import com.example.shelfsense.navigation.Routes
 
-private data class Tab(val route: String, val label: String, val icon: ImageVector)
+private data class NavItem(
+    val route: String,
+    val label: String,
+    val icon: ImageVector
+)
 
-private val Tabs = listOf(
-    Tab(Routes.HOME, "Orders", Icons.Outlined.Assignment),
-    Tab(Routes.STOCK, "Stock", Icons.Outlined.ListAlt),
-    Tab(Routes.PROFILE, "Profile", Icons.Outlined.Person)
+private val navItems = listOf(
+    NavItem(Routes.ORDERS,  "Orders",  Icons.Outlined.ListAlt),
+    NavItem(Routes.STOCK,   "Stock",   Icons.Outlined.Inventory2),
+    NavItem(Routes.CATALOG, "Catalog", Icons.Outlined.ViewModule),
+    NavItem(Routes.SCAN,    "Scan",    Icons.Outlined.QrCode),
+    NavItem(Routes.PROFILE, "Profile", Icons.Outlined.Person),
 )
 
 @Composable
 fun BottomNavBar(navController: NavController) {
-    val currentRoute = navController
-        .currentBackStackEntryAsState().value?.destination?.route
-
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     NavigationBar {
-        Tabs.forEach { tab ->
-            val selected = currentRoute in listOf(tab.route)
+        navItems.forEach { item ->
+            val selected = currentRoute == item.route
             NavigationBarItem(
                 selected = selected,
                 onClick = {
                     if (!selected) {
-                        navController.navigate(tab.route) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        navController.navigate(item.route) {
                             launchSingleTop = true
                             restoreState = true
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
                         }
                     }
                 },
-                icon = { Icon(tab.icon, contentDescription = tab.label) },
-                label = { Text(tab.label) }
+                icon = { androidx.compose.material3.Icon(item.icon, contentDescription = item.label) },
+                label = { Text(item.label) }
             )
         }
     }

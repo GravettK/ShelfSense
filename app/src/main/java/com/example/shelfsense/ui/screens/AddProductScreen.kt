@@ -1,113 +1,135 @@
 package com.example.shelfsense.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.foundation.text.KeyboardOptions   // ✅ correct package
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.shelfsense.data.repository.MockData
-import com.example.shelfsense.data.repository.Part
-import com.example.shelfsense.data.repository.ProductModel
-import com.example.shelfsense.ui.components.CenteredScreenTitle
-import com.example.shelfsense.ui.theme.Dimens
+import com.example.shelfsense.data.AppDatabase
+import com.example.shelfsense.data.dao.ProductDao
+import com.example.shelfsense.data.entities.Product
+import com.example.shelfsense.ui.components.AppScaffold
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun AddProductScreen(navController: NavController) {
-    var code by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var width by remember { mutableStateOf("") }
-    var height by remember { mutableStateOf("") }
-    var length by remember { mutableStateOf("") }
-    var weight by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val db = remember { AppDatabase.get(context) }
+    val dao: ProductDao = remember { db.productDao() }
+    val scope = rememberCoroutineScope()
 
-    val stock = MockData.stock
-    val qtyBySku = remember { mutableStateMapOf<String, String>() }
+    var name by rememberSaveable { mutableStateOf("") }
+    var sku by rememberSaveable { mutableStateOf("") }
+    var cost by rememberSaveable { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(Dimens.ScreenPadding),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        CenteredScreenTitle("Add Product")
-
-        OutlinedTextField(value = code, onValueChange = { code = it }, label = { Text("Product code") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+    AppScaffold(
+        title = "Add Product"
+    ) { inner ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(inner)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             OutlinedTextField(
-                value = width, onValueChange = { width = it }, label = { Text("Width (mm)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), singleLine = true, modifier = Modifier.weight(1f)
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Product name") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
             )
             OutlinedTextField(
-                value = height, onValueChange = { height = it }, label = { Text("Height (mm)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), singleLine = true, modifier = Modifier.weight(1f)
+                value = sku,
+                onValueChange = { sku = it },
+                label = { Text("SKU") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Ascii,
+                    imeAction = ImeAction.Next
+                )
             )
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
-                value = length, onValueChange = { length = it }, label = { Text("Length (mm)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), singleLine = true, modifier = Modifier.weight(1f)
+                value = cost,
+                onValueChange = { cost = it },
+                label = { Text("Cost") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        scope.launch {
+                            saveProduct(dao, name, sku, cost) { msg ->
+                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                if (msg.startsWith("Saved")) navController.popBackStack()
+                            }
+                        }
+                    }
+                )
             )
-            OutlinedTextField(
-                value = weight, onValueChange = { weight = it }, label = { Text("Weight (kg)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), singleLine = true, modifier = Modifier.weight(1f)
-            )
-        }
 
-        Text("Parts per unit (optional)", style = MaterialTheme.typography.titleMedium)
-
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.weight(1f)) {
-            items(stock) { item ->
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                    Text(item.name, modifier = Modifier.weight(1f))
-                    OutlinedTextField(
-                        value = qtyBySku[item.sku] ?: "",
-                        onValueChange = { qtyBySku[item.sku] = it },
-                        label = { Text("Qty") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        singleLine = true,
-                        modifier = Modifier.width(90.dp)
-                    )
-                }
+            Spacer(Modifier.height(8.dp))
+            Button(
+                onClick = {
+                    scope.launch {
+                        saveProduct(dao, name, sku, cost) { msg ->
+                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                            if (msg.startsWith("Saved")) navController.popBackStack()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Save", style = MaterialTheme.typography.labelLarge)
             }
         }
-
-        Button(
-            onClick = {
-                val parts = qtyBySku.mapNotNull { (sku, qtyTxt) ->
-                    val qty = qtyTxt.toIntOrNull() ?: 0
-                    if (qty > 0) {
-                        val nameFromStock = MockData.getStock(sku)?.name ?: sku
-                        Part(sku = sku, name = nameFromStock, qtyPerUnit = qty)
-                    } else null
-                }
-
-                val model = ProductModel(
-                    code = code.trim(),
-                    name = name.trim(),
-                    widthMm = width.toIntOrNull() ?: 0,
-                    heightMm = height.toIntOrNull() ?: 0,
-                    lengthMm = length.toIntOrNull() ?: 0,
-                    weightKg = weight.toIntOrNull() ?: 0,
-                    parts = parts
-                )
-                MockData.addProduct(model)
-                navController.popBackStack()
-            },
-            enabled = code.isNotBlank() && name.isNotBlank(),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Save Product")
-        }
     }
+}
+
+private suspend fun saveProduct(
+    dao: ProductDao,
+    name: String,
+    sku: String,
+    cost: String,
+    notify: (String) -> Unit
+) {
+    if (name.isBlank() || sku.isBlank() || cost.isBlank()) {
+        notify("Please fill all fields")
+        return
+    }
+    val price = cost.toDoubleOrNull()
+    if (price == null) {
+        notify("Cost must be a number")
+        return
+    }
+    withContext(Dispatchers.IO) {
+        dao.insert(
+            Product(
+                name = name.trim(),
+                sku = sku.trim(),
+                cost = price
+            )
+        )
+    }
+    notify("Saved product: $name")
 }

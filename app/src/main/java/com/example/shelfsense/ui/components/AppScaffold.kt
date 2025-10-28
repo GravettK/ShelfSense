@@ -1,59 +1,60 @@
 package com.example.shelfsense.ui.components
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 
+/**
+ * App shell with colored top bar, optional FAB, and optional bottom bar.
+ * Uses a plain FAB for broad Material3 compatibility.
+ */
 @Composable
 fun AppScaffold(
     title: String,
-    // Center FAB
-    onFabClick: (() -> Unit)?,
-    fabLabel: String = "Scan",
-    // Top-bar actions (optional)
-    topBarActions: (@Composable () -> Unit)? = null,
-    // Bottom bar content (pass BottomNavBar or nothing)
+    modifier: Modifier = Modifier,
+    onFabClick: (() -> Unit)? = null,
+    fabLabel: String = "Add",
+    fab: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
-    content: @Composable (Modifier) -> Unit
+    content: @Composable (PaddingValues) -> Unit
 ) {
-    val colors = MaterialTheme.colorScheme
+    val topBarColors = TopAppBarDefaults.topAppBarColors(
+        containerColor = MaterialTheme.colorScheme.primary,
+        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+        actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+    )
 
     Scaffold(
+        modifier = modifier,
         topBar = {
-            // Center-aligned top app bar for consistent centered title
-            CenterAlignedTopAppBar(
+            TopAppBar(
                 title = { Text(title) },
-                actions = { topBarActions?.invoke() },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = colors.primary,
-                    titleContentColor = colors.onPrimary,
-                    actionIconContentColor = colors.onPrimary,
-                    navigationIconContentColor = colors.onPrimary
-                )
+                colors = topBarColors
             )
         },
+
         floatingActionButton = {
-            if (onFabClick != null) {
-                ExtendedFloatingActionButton(
-                    onClick = onFabClick,
-                    icon = { Icon(Icons.Filled.QrCodeScanner, contentDescription = null) },
-                    text = { Text(fabLabel) },
-                    containerColor = colors.primary,
-                    contentColor = colors.onPrimary,
-                    modifier = Modifier.padding(8.dp)
-                )
+            when {
+                fab != null -> fab()
+                onFabClick != null -> {
+                    FloatingActionButton(onClick = onFabClick) {
+                        // simple icon; if you really want text, wrap Row { Icon(); Spacer(); Text(fabLabel) }
+                        Icon(Icons.Filled.Add, contentDescription = fabLabel)
+                    }
+                }
             }
         },
-        floatingActionButtonPosition = FabPosition.Center, // ⬅ centered big Scan
         bottomBar = { bottomBar?.invoke() },
-        containerColor = colors.background
-    ) { innerPadding ->
-        Surface(color = colors.background, contentColor = colors.onBackground) {
-            content(Modifier.padding(innerPadding))
-        }
-    }
+        content = content
+    )
 }

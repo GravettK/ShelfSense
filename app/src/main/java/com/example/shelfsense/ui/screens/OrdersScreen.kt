@@ -1,33 +1,27 @@
 package com.example.shelfsense.ui.screens
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.shelfsense.navigation.Routes
 import com.example.shelfsense.ui.components.AppScaffold
 import com.example.shelfsense.ui.components.BottomNavBar
 
 @Composable
-fun PartDetailScreen(
-    navController: NavController,
-    sku: String
-) {
+fun OrdersScreen(navController: NavController) {
     AppScaffold(
-        title = "Part: $sku",
+        title = "Orders",
+        onFabClick = { navController.navigate(Routes.ADD_ORDER) },
+        fabLabel = "Add Order",
         bottomBar = { BottomNavBar(navController) }
-    ) { pv: PaddingValues ->
-        Column(
-            modifier = Modifier
-                .padding(pv)
-                .padding(16.dp)
-                .fillMaxSize()
-        ) {
-            Text("Detail for SKU: $sku") // replace with DB lookup
+    ) { _: PaddingValues ->
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopStart) {
+            Text("Orders will appear here.")
         }
     }
 }

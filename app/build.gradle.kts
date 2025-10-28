@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp) // Room / annotation processing
 }
 
 android {
@@ -27,36 +28,57 @@ android {
         }
     }
 
-    // Use Java 17 (required/recommended by recent AGP & Compose)
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = "17"
-        // ✅ Global opt-in for Material3 experimental APIs (e.g., TopAppBar/CenterAlignedTopAppBar)
         freeCompilerArgs += listOf(
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
         )
     }
 
     buildFeatures { compose = true }
+
+    // Room schema output (optional but recommended)
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+        arg("room.incremental", "true")
+        arg("room.generateKotlin", "true")
+    }
 }
 
 dependencies {
+    // Core + lifecycle + activity-compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
-    // Compose BOM controls all Compose versions
+    // Compose BOM + UI
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    // Icons (provides Icons.Filled.QrCode)
+    implementation("androidx.compose.material:material-icons-extended")
 
-    // Navigation (keep explicit unless you have it in libs.versions.toml)
+    // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Room (offline DB)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    // CameraX + ML Kit (for QR/Barcode scanning)
+    val cameraX = "1.3.4"
+    implementation("androidx.camera:camera-core:$cameraX")
+    implementation("androidx.camera:camera-camera2:$cameraX")
+    implementation("androidx.camera:camera-lifecycle:$cameraX")
+    implementation("androidx.camera:camera-view:$cameraX")
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
     // Debug / test
     debugImplementation(libs.androidx.compose.ui.tooling)
@@ -67,7 +89,13 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
-    // Material icons (Filled + Outlined, includes QrCodeScanner)
-    implementation("androidx.compose.material:material-icons-extended")
-
+    // CameraX
+    implementation("androidx.camera:camera-core:1.3.4")
+    implementation("androidx.camera:camera-camera2:1.3.4")
+    implementation("androidx.camera:camera-lifecycle:1.3.4")
+    implementation("androidx.camera:camera-view:1.3.4")
+// ML Kit Barcode scanning
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
+// Material icons (scanner icon)
+    implementation("androidx.compose.material:material-icons-extended:1.7.4")
 }
