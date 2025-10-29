@@ -24,7 +24,6 @@ class AuthDbHelper(private val context: Context) {
     }
 
     fun signUp(name: String, email: String, phone: String, password: String): Result<Unit> {
-        // Single-user store; if an account exists with different email, overwrite intentionally.
         val hash = sha256(password)
         prefs.edit()
             .putString(KEY_NAME, name)
@@ -37,14 +36,18 @@ class AuthDbHelper(private val context: Context) {
     }
 
     fun login(email: String, password: String): Result<Unit> {
-        val storedEmail = prefs.getString(KEY_EMAIL, null) ?: return Result.failure(IllegalStateException("No account found. Please sign up."))
-        val storedHash = prefs.getString(KEY_PW_HASH, null) ?: return Result.failure(IllegalStateException("No account found. Please sign up."))
+        val storedEmail = prefs.getString(KEY_EMAIL, null)
+            ?: return Result.failure(IllegalStateException("No account found. Please sign up."))
+        val storedHash = prefs.getString(KEY_PW_HASH, null)
+            ?: return Result.failure(IllegalStateException("No account found. Please sign up."))
+
         val tryHash = sha256(password)
-        if (email.equals(storedEmail, ignoreCase = true) && tryHash == storedHash) {
+        return if (email.equals(storedEmail, ignoreCase = true) && tryHash == storedHash) {
             prefs.edit().putBoolean(KEY_LOGGED_IN, true).apply()
-            return Result.success(Unit)
+            Result.success(Unit)
+        } else {
+            Result.failure(IllegalArgumentException("Invalid credentials"))
         }
-        return Result.failure(IllegalArgumentException("Invalid credentials"))
     }
 
     fun updateProfile(name: String, phone: String) {

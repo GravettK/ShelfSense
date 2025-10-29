@@ -1,6 +1,8 @@
 package com.example.shelfsense.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -11,18 +13,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BottomSheetAdjuster(onPlus: () -> Unit, onMinus: () -> Unit, onCustom: (Int) -> Unit) {
+fun BottomSheetAdjuster(
+    onPlus: () -> Unit,
+    onMinus: () -> Unit,
+    onCustom: (Int) -> Unit
+) {
     Column(
-        modifier = Modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Adjust quantity",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground
+            text = "Adjust Quantity",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface
         )
-        Button(onClick = onPlus, modifier = Modifier.padding(top = 8.dp)) { Text("+1") }
-        Button(onClick = onMinus, modifier = Modifier.padding(top = 8.dp)) { Text("-1") }
-        Button(onClick = { onCustom(0) }, modifier = Modifier.padding(top = 8.dp)) { Text("Custom…") }
+
+        Button(onClick = onPlus, modifier = Modifier.fillMaxWidth(0.8f)) {
+            Text("+1")
+        }
+        Button(onClick = onMinus, modifier = Modifier.fillMaxWidth(0.8f)) {
+            Text("-1")
+        }
+        Button(onClick = { onCustom(0) }, modifier = Modifier.fillMaxWidth(0.8f)) {
+            Text("Custom…")
+        }
     }
 }

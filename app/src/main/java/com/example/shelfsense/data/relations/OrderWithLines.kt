@@ -7,6 +7,10 @@ import com.example.shelfsense.data.entities.OrderLineEntity
 
 data class OrderWithLines(
     @Embedded val order: OrderEntity,
-    @Relation(parentColumn = "orderNo", entityColumn = "orderNo")
+    @Relation(
+        parentColumn = "orderNo",
+        entityColumn = "orderNo",
+        entity = OrderLineEntity::class
+    )
     val lines: List<OrderLineEntity>
 )

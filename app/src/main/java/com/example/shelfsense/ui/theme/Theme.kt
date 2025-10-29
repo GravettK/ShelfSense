@@ -10,7 +10,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-// Light color scheme – only the tokens we defined in Color.kt
+// --- Light Color Scheme ---
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
@@ -22,7 +22,7 @@ private val LightColors = lightColorScheme(
     onSurface = md_theme_light_onSurface,
 )
 
-// Dark color scheme – only the tokens we defined in Color.kt
+// --- Dark Color Scheme ---
 private val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
@@ -37,16 +37,17 @@ private val DarkColors = darkColorScheme(
 @Composable
 fun ShelfSenseTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,   // keep false while validating brand colors
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme =
-        if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    val colorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val ctx = LocalContext.current
             if (useDarkTheme) dynamicDarkColorScheme(ctx) else dynamicLightColorScheme(ctx)
-        } else {
-            if (useDarkTheme) DarkColors else LightColors
         }
+        useDarkTheme -> DarkColors
+        else -> LightColors
+    }
 
     MaterialTheme(
         colorScheme = colorScheme,

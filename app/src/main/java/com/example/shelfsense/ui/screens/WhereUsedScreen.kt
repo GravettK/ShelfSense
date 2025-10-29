@@ -1,21 +1,27 @@
 package com.example.shelfsense.ui.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.shelfsense.ui.components.CenteredScreenTitle
-import com.example.shelfsense.ui.theme.Dimens
+import com.example.shelfsense.ui.components.AppScaffold
+import com.example.shelfsense.ui.components.BottomNavBar
+import com.example.shelfsense.ui.components.ScreenColumn
 
 data class ProductUsage(
     val productName: String,
@@ -27,6 +33,7 @@ fun WhereUsedScreen(
     navController: NavController,
     componentName: String? = "Unknown Component"
 ) {
+    // Placeholder list – replace with DAO-backed data when ready
     val usageList = remember {
         listOf(
             ProductUsage("500L Hydraulic Tank", 1),
@@ -36,43 +43,37 @@ fun WhereUsedScreen(
         )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(Dimens.ScreenPadding)
-    ) {
-        CenteredScreenTitle("Where Used")
+    AppScaffold(
+        title = "Where Used",
+        bottomBar = { BottomNavBar(navController) }
+    ) { pv ->
+        // Scroll-ready container that applies Scaffold insets
+        ScreenColumn(padding = pv) {
 
-        Text(
-            text = "Component: ${componentName ?: "Unknown Component"}",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
-        )
+            Text(
+                text = "Component: ${componentName ?: "Unknown Component"}",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(usageList) { usage ->
-                ProductUsageCard(usage)
-            }
+            Divider()
 
             if (usageList.isEmpty()) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 48.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "No product usage data found for this part.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                        )
+                Text(
+                    text = "No product usage data found for this part.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(top = 48.dp)
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(usageList) { usage ->
+                        ProductUsageCard(usage)
                     }
                 }
             }
@@ -81,27 +82,28 @@ fun WhereUsedScreen(
 }
 
 @Composable
-fun ProductUsageCard(usage: ProductUsage) {
+private fun ProductUsageCard(usage: ProductUsage) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = MaterialTheme.shapes.medium
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.CardPadding),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(16.dp)
         ) {
             Text(
                 text = usage.productName,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
+            Spacer(Modifier.height(4.dp))
             Text(
-                text = "Qty: ${usage.quantityPer}",
+                text = "Qty per assembly: ${usage.quantityPer}",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )

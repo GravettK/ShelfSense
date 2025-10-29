@@ -3,42 +3,57 @@ package com.example.shelfsense.data.repository
 import com.example.shelfsense.data.dao.OrderDao
 import com.example.shelfsense.data.entities.OrderEntity
 import com.example.shelfsense.data.entities.OrderLineEntity
-import com.example.shelfsense.data.relations.OrderWithLines
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class OrderRepository(private val dao: OrderDao) {
 
-    /** All orders with lines */
-    fun observeAll(): Flow<List<OrderWithLines>> =
+    // --- Observe (entities) ---
+
+    fun observeAll(): Flow<List<OrderEntity>> =
         dao.observeOrders()
 
-    /** Active = anything not Completed */
-    fun observeActive(): Flow<List<OrderWithLines>> =
-        observeAll().map { list -> list.filter { it.order.status != "Completed" } }
+    fun observeActive(): Flow<List<OrderEntity>> =
+        observeAll().map { it.filter { o -> o.status != "Completed" } }
 
-    /** Completed only */
-    fun observeCompleted(): Flow<List<OrderWithLines>> =
-        observeAll().map { list -> list.filter { it.order.status == "Completed" } }
+    fun observeCompleted(): Flow<List<OrderEntity>> =
+        observeAll().map { it.filter { o -> o.status == "Completed" } }
 
-    /** Single order by orderNo */
-    fun observe(orderNo: String): Flow<OrderWithLines?> =
+    fun observe(orderNo: String): Flow<OrderEntity?> =
         dao.observeOrder(orderNo)
 
-    /** Upsert order + (optional) lines */
-    suspend fun upsert(order: OrderEntity, lines: List<OrderLineEntity>) {
+    // --- Mutations ---
+
+    /** Upsert order; optionally append lines (no overwrite). */
+    suspend fun upsert(order: OrderEntity, lines: List<OrderLineEntity> = emptyList()) {
         dao.upsertOrder(order)
         if (lines.isNotEmpty()) dao.upsertLines(lines)
     }
 
-    /** Change status */
-    suspend fun setStatus(orderNo: String, status: String) =
-        dao.setStatus(orderNo, status)
+    /** Overwrite all lines for an order. */
+    suspend fun replaceLines(orderNo: String, newLines: List<OrderLineEntity>) {
+        dao.deleteLinesForOrder(orderNo)
+        if (newLines.isNotEmpty()) dao.upsertLines(newLines)
+    }
 
-    /** Delete order and its lines */
-    suspend fun deleteCompletely(orderNo: String) =
-        dao.deleteOrderCompletely(orderNo)
+    /** Append additional lines to an existing order. */
+    suspend fun addLines(lines: List<OrderLineEntity>) {
+        if (lines.isNotEmpty()) dao.upsertLines(lines)
+    }
 
-    /** Count */
-    fun count(): Flow<Int> = dao.countOrders()
+    /** Create or update an order and replace its lines in one call. */
+    suspend fun createOrUpdate(order: OrderEntity, lines: List<OrderLineEntity>) {
+        dao.upsertOrder(order)
+        replaceLines(order.orderNo, lines)
+    }
+
+    /** Delete order and all its lines. */
+    suspend fun deleteCompletely(orderNo: String) {
+        dao.deleteLinesForOrder(orderNo)
+        dao.deleteOrder(orderNo)
+    }
+
+    // --- Count (derived from stream, since DAO no longer exposes COUNT) ---
+
+    fun count(): Flow<Int> = observeAll().map { it.size }
 }

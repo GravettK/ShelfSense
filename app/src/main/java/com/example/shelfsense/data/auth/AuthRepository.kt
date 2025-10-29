@@ -20,15 +20,15 @@ class AuthRepository(context: Context) {
     }
 
     fun signUp(name: String, email: String, phone: String, password: String): Result<Unit> {
-        val res = helper.signUp(name, email, phone, password)
+        val result = helper.signUp(name, email, phone, password)
         refresh()
-        return res
+        return result
     }
 
     fun login(email: String, password: String): Result<Unit> {
-        val res = helper.login(email, password)
+        val result = helper.login(email, password)
         refresh()
-        return res
+        return result
     }
 
     fun updateProfile(name: String, phone: String) {

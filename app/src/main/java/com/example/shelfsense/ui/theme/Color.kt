@@ -28,7 +28,7 @@ val md_theme_dark_onBackground = MTI_White
 val md_theme_dark_surface = Color(0xFF121212)
 val md_theme_dark_onSurface = MTI_White
 
-// Semantic status colors
-val StockOk = Color(0xFF2E7D32)     // green
+// === Semantic / Status Colors ===
+val StockOk = Color(0xFF2E7D32)     // green for sufficient stock
 val StockLow = MTI_Red              // red accent from brand
-
+val StockWarning = Color(0xFFF9A825) // amber/yellow for low warning

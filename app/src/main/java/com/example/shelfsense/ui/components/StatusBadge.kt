@@ -15,9 +15,6 @@ import androidx.compose.ui.unit.sp
 
 enum class BadgeStyle { INFO, SUCCESS, WARNING, ERROR }
 
-/**
- * Base badge (your component).
- */
 @Composable
 fun StatusBadge(
     label: String,
@@ -25,10 +22,22 @@ fun StatusBadge(
     modifier: Modifier = Modifier
 ) {
     val (bgColor, textColor) = when (style) {
-        BadgeStyle.INFO -> Pair(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.onPrimary)
-        BadgeStyle.SUCCESS -> Pair(MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary)
-        BadgeStyle.WARNING -> Pair(MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.onSecondary)
-        BadgeStyle.ERROR -> Pair(MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.onError)
+        BadgeStyle.INFO -> Pair(
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.onPrimary
+        )
+        BadgeStyle.SUCCESS -> Pair(
+            MaterialTheme.colorScheme.tertiary,
+            MaterialTheme.colorScheme.onTertiary
+        )
+        BadgeStyle.WARNING -> Pair(
+            MaterialTheme.colorScheme.secondary,
+            MaterialTheme.colorScheme.onSecondary
+        )
+        BadgeStyle.ERROR -> Pair(
+            MaterialTheme.colorScheme.error,
+            MaterialTheme.colorScheme.onError
+        )
     }
 
     Box(
@@ -47,9 +56,6 @@ fun StatusBadge(
     }
 }
 
-/**
- * Convenience mapper: order status -> BadgeStyle.
- */
 fun badgeStyleForStatus(status: String): BadgeStyle =
     when (status.trim().lowercase()) {
         "completed" -> BadgeStyle.SUCCESS
